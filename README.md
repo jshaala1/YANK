@@ -29,23 +29,43 @@ We’ve built an easy-to-use interface on top of it so you don’t have to worry
 
 ## **Installation and Usage**
 
-### **Option 1: Standalone .exe (No Python Required)**  
+### **Option 1: Standalone .exe (Windows Only - No Python Required)**  
 You can easily download the `.exe` file and run it without needing Python or any dependencies. 
 
 #### How to Use:  
-1. Download the `.exe` file (provided).  
+1. Download the `.exe` file (provided in the release).  
 2. Double-click the file to launch the program.  
 3. Enter a YouTube URL (or choose a CSV file with multiple URLs).  
 4. Select your desired video format, audio only option, subtitles, and thumbnail download options.  
 5. Click "Download" and let the tool grab the video for you.
 
-### **Option 2: Command-Line Usage (Requires Python)**  
+### **Option 2: Standalone Executable for Linux**  
+For Linux users, you can download the precompiled `.exe` file or build it from source as described below.  
+
+- **Run the Linux binary**: Download the executable for Linux from the releases section and run it directly, no need for Python.
+
+#### How to Use:  
+1. Download the Linux `.exe` (or `.bin` for Linux) file.  
+2. Mark the file as executable:  
+   ```bash
+   chmod +x YANK-linux.exe
+   ```  
+3. Run the file directly:  
+   ```bash
+   ./YANK-linux.exe
+   ```
+
+### **Option 3: Command-Line Usage (Requires Python)**  
 If you prefer running the tool from the command line, you can clone the repository and use it via Python. 
 
 1. **Install Dependencies**  
    - Clone this repository:  
      ```bash
-     git clone https://github.com/jshaala1/YANK/tree/main
+     git clone https://github.com/jshaala1/YANK.git
+     ```  
+   - Navigate into the project folder:  
+     ```bash
+     cd YANK
      ```  
    - Install Python dependencies:  
      ```bash
@@ -68,17 +88,72 @@ If you prefer running the tool from the command line, you can clone the reposito
 YANK was built using **Python** and **yt-dlp**, and you can modify or extend the functionality.
 
 ### Steps to Build:  
-1. Clone the repository.  
-2. Install dependencies:  
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Build the standalone executable using **PyInstaller**:  
-   ```bash
-   pyinstaller --onefile --windowed --hidden-import yt_dlp --hidden-import tkinter YANK.py
-   ```
-   After building, you’ll find the `.exe` in the `dist` folder.  
-4. For extra polish, consider creating a Windows installer using **Inno Setup**.
+1. **Clone the repository**  
+   - Clone the repository to your local machine:  
+     ```bash
+     git clone https://github.com/jshaala1/YANK.git
+     ```  
+   - Navigate to the cloned folder:  
+     ```bash
+     cd YANK
+     ```
+
+2. **Create and Activate a Virtual Environment**  
+   - Create a virtual environment:  
+     ```bash
+     python -m venv venv
+     ```
+   - Activate the virtual environment:  
+     - On **Windows**:  
+       ```bash
+       .\venv\Scripts\activate
+       ```  
+     - On **macOS/Linux**:  
+       ```bash
+       source venv/bin/activate
+       ```
+
+3. **Install Dependencies**  
+   - Install the required Python dependencies:  
+     ```bash
+     pip install -r requirements.txt
+     ```
+
+4. **Build the Standalone Executable for Windows**  
+   - Install **PyInstaller** (if not already installed):  
+     ```bash
+     pip install pyinstaller
+     ```
+   - Build the executable using PyInstaller:  
+     ```bash
+     pyinstaller --onefile --windowed --hidden-import yt_dlp --hidden-import tkinter YANK.py
+     ```
+
+   After building, the `.exe` file will be located in the `dist` folder.
+
+5. **Build the Standalone Executable for Linux**  
+   To build a Linux binary, follow these instructions:
+
+   - Ensure that you have **PyInstaller** installed:  
+     ```bash
+     pip install pyinstaller
+     ```
+
+   - Build the executable:  
+     ```bash
+     pyinstaller --onefile YANK.py
+     ```
+
+   The `.exe` or `.bin` file for Linux will be located in the `dist` folder.
+
+6. **(Optional) Create a Windows Installer**  
+   If you want to create a more polished installer for Windows, you can use **Inno Setup** or another installer tool to bundle the executable into an installer.
+
+7. **Deactivate the Virtual Environment**  
+   - When you're done building, deactivate the virtual environment:  
+     ```bash
+     deactivate
+     ```
 
 ---
 
@@ -102,6 +177,3 @@ Just clean, reliable video downloads—without the hassle.
 
 ## **Disclaimer**  
 This tool is **for educational purposes only**. Please ensure you respect copyright and intellectual property rights when using this tool. Downloading videos from YouTube and other platforms may be subject to the **terms of service** of the respective websites. Always ensure you have permission to download content.
-
----
-
