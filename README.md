@@ -48,11 +48,11 @@ For Linux users, you can download the precompiled `.exe` file or build it from s
 1. Download the Linux `.exe` (or `.bin` for Linux) file.  
 2. Mark the file as executable:  
    ```bash
-   chmod +x YANK-linux.exe
+   chmod +x YANK
    ```  
 3. Run the file directly:  
    ```bash
-   ./YANK-linux.exe
+   ./YANK
    ```
 
 ### **Option 3: Command-Line Usage (Requires Python)**  
@@ -76,6 +76,10 @@ If you prefer running the tool from the command line, you can clone the reposito
    - Usage:  
      ```bash
      python YANK.py <YouTube URL or path to CSV file with URLs> --save_path <Optional: destination folder> --format <Optional: mp4, mkv, webm> --audio_only --subtitles --thumbnail
+     ```
+    - Launch GUI 
+     ```bash
+     python YANK.py 
      ```
      Example:  
      ```bash
