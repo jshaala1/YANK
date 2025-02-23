@@ -72,7 +72,24 @@ If you prefer running the tool from the command line, you can clone the reposito
      pip install -r requirements.txt
      ```
 
-2. **Run from Command Line**  
+2. **Install FFmpeg**  
+   For video processing, **FFmpeg** is required. You can install it as follows:
+
+   - **Linux (Ubuntu/Debian)**:
+     ```bash
+     sudo apt update
+     sudo apt install ffmpeg
+     ```
+
+   - **macOS**:
+     ```bash
+     brew install ffmpeg
+     ```
+
+   - **Windows**:
+     Download the FFmpeg build from [here](https://ffmpeg.org/download.html) and follow the installation instructions.
+
+3. **Run from Command Line**  
    - Usage:  
      ```bash
      python YANK.py <YouTube URL or path to CSV file with URLs> --save_path <Optional: destination folder> --format <Optional: mp4, mkv, webm> --audio_only --subtitles --thumbnail
