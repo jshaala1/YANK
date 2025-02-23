@@ -1,4 +1,4 @@
-# YANK: Video Downloader
+# YANK: Youtube Video Downloader
 
 ## **Overview**  
 YANK is a **wrapper** around the powerful [yt-dlp](https://github.com/yt-dlp/yt-dlp) library, designed to provide a **clean, straightforward way** to download videos from YouTube and other supported platforms.
