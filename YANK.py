@@ -9,8 +9,11 @@ DEFAULT_FORMAT = "webm"
 DEFAULT_SAVE_PATH = "."
 
 def get_ffmpeg_path():
-    """finds the ffmpeg binary."""
-    return sys._MEIPASS + "/ffmpeg" if getattr(sys, 'frozen', False) else "ffmpeg"
+    """Finds the ffmpeg binary."""
+    if getattr(sys, 'frozen', False):  # If running as a bundled executable
+        # Retrieve the path to ffmpeg.exe inside the bundle (PyInstaller extracts it to _MEIPASS)
+        return os.path.join(sys._MEIPASS, "ffmpeg.exe")
+    return "ffmpeg"  # Default for regular Python execution
 
 def is_ffmpeg_working(ffmpeg_path):
     """checks if ffmpeg is available."""
@@ -45,17 +48,19 @@ def progress_hook(d):
         except Exception:
             pass
 
-def download_video(video_url, save_path=DEFAULT_SAVE_PATH, format_choice=DEFAULT_FORMAT, audio_only=False, subtitles=False, download_thumbnail=False):
+
+def download_video(video_url, save_path, format_choice, audio_only, subtitles, download_thumbnail):
     """downloads the video with given options."""
     import tkinter.messagebox as messagebox  # Import inside the function
 
     try:
+        # Ensure yt_dlp uses the bundled ffmpeg
         ydl_opts = {
-        'format': 'bv*+ba/best', 
-        'outtmpl': os.path.join(save_path, '%(title)s.%(ext)s'),
-        'progress_hooks': [progress_hook]
+            'ffmpeg_location': get_ffmpeg_path(),  # Set the path for ffmpeg
+            'format': 'bv*+ba/best', 
+            'outtmpl': os.path.join(save_path, '%(title)s.%(ext)s'),
+            'progress_hooks': [progress_hook]
         }
-
 
         if audio_only:
             ydl_opts['format'] = 'bestaudio/best'
