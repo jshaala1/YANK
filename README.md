@@ -1,4 +1,4 @@
-# YANK: Youtube Video Downloader
+# YANK: YouTube Video Downloader
 
 ## **Overview**  
 YANK is a **wrapper** around the powerful [yt-dlp](https://github.com/yt-dlp/yt-dlp) library, designed to provide a **clean, straightforward way** to download videos from YouTube and other supported platforms.
@@ -95,11 +95,12 @@ YANK was built using **Python** and **yt-dlp**, and you can modify or extend its
 2. **Build Executable**
    - **Windows:**
      ```bash
-     pyinstaller --onefile --windowed --hidden-import yt_dlp --hidden-import tkinter YANK.py
+     python -m PyInstaller --onefile --noconsole --add-binary "ffmpeg.exe;." YANK.py
      ```
    - **Linux:**
      ```bash
-     pyinstaller --onefile YANK.py
+     pyinstaller --onefile --windowed --noconfirm --clean --strip --optimize=2 \
+         --hidden-import yt_dlp --hidden-import tkinter --add-binary "ffmpeg:." YANK.py
      ```
    The output executable will be located in the `dist` folder.
 
@@ -107,9 +108,15 @@ YANK was built using **Python** and **yt-dlp**, and you can modify or extend its
 For a fully self-contained version, you can bundle FFmpeg into the standalone executable:
 - Download a static build of FFmpeg from [here](https://ffmpeg.org/download.html).
 - Modify the PyInstaller build command to include the FFmpeg binary:
-  ```bash
-  pyinstaller --onefile --windowed --add-binary "path/to/ffmpeg;ffmpeg" --hidden-import yt_dlp --hidden-import tkinter YANK.py
-  ```
+  - **Windows:**
+    ```bash
+    python -m PyInstaller --onefile --noconsole --add-binary "path/to/ffmpeg.exe;ffmpeg.exe" --hidden-import yt_dlp --hidden-import tkinter YANK.py
+    ```
+  - **Linux:**
+    ```bash
+    pyinstaller --onefile --windowed --noconfirm --clean --strip --optimize=2 \
+        --hidden-import yt_dlp --hidden-import tkinter --add-binary "path/to/ffmpeg;ffmpeg" YANK.py
+    ```
   This ensures that FFmpeg is embedded within the executable, so users don’t need to install it separately.
 
 ---
