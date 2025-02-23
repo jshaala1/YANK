@@ -4,6 +4,7 @@ import argparse
 import re
 import yt_dlp
 import subprocess
+import platform
 import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
@@ -11,14 +12,19 @@ from tkinter import filedialog, messagebox, ttk
 DEFAULT_FORMAT = "webm"
 DEFAULT_SAVE_PATH = "."
 
+
 def get_ffmpeg_path():
-    """Finds the ffmpeg binary."""
-    if getattr(sys, 'frozen', False):  # If running as a bundled executable
-        return os.path.join(sys._MEIPASS, "ffmpeg.exe")
-    return "ffmpeg"  # Default for regular Python execution
+    """Finds the ffmpeg binary based on the OS and PyInstaller bundle status."""
+    is_windows = platform.system() == "Windows"
+    ffmpeg_filename = "ffmpeg.exe" if is_windows else "ffmpeg"
+
+    if getattr(sys, 'frozen', False):  # Running as a PyInstaller bundle
+        return os.path.join(sys._MEIPASS, ffmpeg_filename)
+    
+    return ffmpeg_filename  # Default for regular Python execution (expects ffmpeg in PATH)
 
 def is_ffmpeg_working(ffmpeg_path):
-    """Checks if ffmpeg is available."""
+    """Checks if ffmpeg is available and working."""
     try:
         result = subprocess.run([ffmpeg_path, "-version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         return result.returncode == 0
@@ -26,10 +32,17 @@ def is_ffmpeg_working(ffmpeg_path):
         return False
 
 def check_ffmpeg():
-    """Ensures ffmpeg is available."""
+    """Ensures ffmpeg is available, otherwise exits."""
     ffmpeg_path = get_ffmpeg_path()
+
+    # Ensure ffmpeg is executable on Linux/macOS
+    if platform.system() != "Windows" and os.path.exists(ffmpeg_path):
+        os.chmod(ffmpeg_path, 0o755)
+
     if not is_ffmpeg_working(ffmpeg_path):
-        sys.exit("ffmpeg is required. Install it or include it in the exe.")
+        sys.exit("Error: ffmpeg is required. Install it or include it in the exe.")
+
+    print(f"Using ffmpeg at: {ffmpeg_path}")
 
 check_ffmpeg()
 
