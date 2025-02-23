@@ -134,4 +134,3 @@ Just clean, reliable video downloads—without the hassle.
 
 ## **Disclaimer**  
 This tool is **for educational purposes only**. Please ensure you respect copyright and intellectual property rights when using this tool. Downloading videos from YouTube and other platforms may be subject to the **terms of service** of the respective websites. Always ensure you have permission to download content.
-
