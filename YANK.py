@@ -51,7 +51,7 @@ def download_video(video_url, save_path=DEFAULT_SAVE_PATH, format_choice=DEFAULT
 
     try:
         ydl_opts = {
-        'format': 'bv*+ba/best',  # Always pick the best available video & audio
+        'format': 'bv*+ba/best', 
         'outtmpl': os.path.join(save_path, '%(title)s.%(ext)s'),
         'progress_hooks': [progress_hook]
         }
