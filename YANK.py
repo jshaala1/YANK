@@ -52,28 +52,36 @@ def is_valid_youtube_url(url):
     return re.match(youtube_regex, url) is not None
 
 def progress_hook(d):
-    """Updates the progress bar."""
-    if d['status'] == 'downloading' and progress_bar:
-        try:
+    """Updates the progress bar only if running in GUI mode."""
+    if 'progress_bar' in globals():  # This means GUI mode is active
+        if d['status'] == 'downloading':
             downloaded = d.get('downloaded_bytes', 0)
             total = d.get('total_bytes', d.get('total_bytes_estimate', 1))
-            progress_bar["value"] = int((downloaded / total) * 100)
-            progress_label.config(text=f"Downloading... {progress_bar['value']}%")
-            root.update_idletasks()
-        except Exception:
-            pass
+            percent = int((downloaded / total) * 100)
+
+            try:
+                progress_bar["value"] = percent
+                progress_label.config(text=f"Downloading... {percent}%")
+                root.update_idletasks()
+            except Exception:
+                pass
+
+        elif d['status'] == 'finished':
+            progress_label.config(text="Download complete!")
 
 def download_video(video_url, save_path, format_choice, audio_only, subtitles, download_thumbnail):
     """Downloads the video with given options."""
     import tkinter.messagebox as messagebox  
 
     try:
+        # Define format selection mapping
         format_map = {
-            'webm': 'bestvideo+bestaudio/best',  
-            'mp4': 'bv*+ba/best',  
-            'mkv': 'bv*+ba/best',  
+            'webm': 'bestvideo[ext=webm]+bestaudio[ext=webm]/best',
+            'mp4': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best',
+            'mkv': 'bestvideo+bestaudio/best'
         }
         
+        # Ensure format choice is valid
         format_selection = format_map.get(format_choice, 'best')
 
         ydl_opts = {
@@ -85,7 +93,7 @@ def download_video(video_url, save_path, format_choice, audio_only, subtitles, d
 
         if audio_only:
             ydl_opts.update({
-                'format': 'bestaudio/best', 
+                'format': 'bestaudio/best',
                 'postprocessors': [{'key': 'FFmpegExtractAudio', 'preferredcodec': 'mp3'}]
             })
 
@@ -98,15 +106,21 @@ def download_video(video_url, save_path, format_choice, audio_only, subtitles, d
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(video_url, download=True)
-            messagebox.showinfo("Success", f"Downloaded: {info['title']}")
 
-        progress_bar["value"] = 0
-        progress_label.config(text="Download complete!")
+            # Only show success message in GUI mode
+            if 'progress_bar' in globals() and 'progress_label' in globals():
+                messagebox.showinfo("Success", f"Downloaded: {info['title']}")
+
+        if 'progress_bar' in globals() and 'progress_label' in globals():
+            progress_bar["value"] = 0
+            progress_label.config(text="Download complete!")
 
     except yt_dlp.utils.DownloadError as e:
-        messagebox.showerror("Download Error", str(e))
+        if 'progress_label' in globals():
+            messagebox.showerror("Download Error", str(e))
     except Exception as e:
-        messagebox.showerror("Error", str(e))
+        if 'progress_label' in globals():
+            messagebox.showerror("Error", str(e))
 
 
 def process_input(video_urls, save_path, format_choice, audio_only, subtitles, download_thumbnail):
@@ -178,7 +192,6 @@ def run_gui():
         else:
             links = [input_source]
 
-        # Start download in a separate thread to keep GUI responsive
         threading.Thread(target=process_input, args=(links, save_path, format_choice, audio_only, subtitles, download_thumbnail), daemon=True).start()
 
     tk.Button(root, text="Download", command=on_download).pack()
